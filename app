@@ -5,6 +5,7 @@ use App\Engine\Wikipedia\WikipediaEngine;
 use App\Engine\Wikipedia\WikipediaParser;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,8 +27,12 @@ class WikipediaCommand extends Command{
     $wikipedia = new WikipediaEngine(new WikipediaParser(), HttpClient::create());
     $result = $wikipedia->search($input->getArgument('conteudo'));
     foreach ($result as $value) {
-      $output->writeln('<info>'.$value->getTitle().'</info>');
+      $rows[] = [$value->getTitle(), $value->getPreview()];
     }
+
+    $table = new Table($output);
+    $table->setHeaders(['Título', 'Resumo'])->setRows($rows);
+    $table->render();
     return 0;
   }
 }
