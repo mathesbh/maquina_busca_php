@@ -25,7 +25,9 @@ class WikipediaCommand extends Command{
   {
     $wikipedia = new WikipediaEngine(new WikipediaParser(), HttpClient::create());
     $result = $wikipedia->search($input->getArgument('conteudo'));
-    var_dump($result);
+    foreach ($result as $value) {
+      $output->writeln('<info>'.$value->getTitle().'</info>');
+    }
     return 0;
   }
 }
